@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdClose, MdKeyboardArrowDown, MdMenu } from "react-icons/md";
 import { Link } from "react-router";
 
 const Navbar = () => {
@@ -84,7 +84,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white fixed top-0 left-0 right-0 border-b border-white/10">
+    <nav className="bg-black text-white fixed top-0 left-0 right-0 border-b border-white/10 z-50">
       <div className="container mx-auto px-4 py-2 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* logo  */}
@@ -97,7 +97,7 @@ const Navbar = () => {
           {/* desktop */}
           <div className="hidden lg:flex items-center space-x-4">
             {Object.keys(menuItems).map((key) => (
-              <div>
+              <div key={menuItems[key].title} className="relative">
                 <button
                   onClick={() => toggleDropdown(key)}
                   className="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium flex items-center"
@@ -109,6 +109,61 @@ const Navbar = () => {
                     } `}
                   />
                 </button>
+
+                {/* dropdown  */}
+
+                {activeDropdown === key && (
+                  <div className="bg-white text-black">
+                    <div className="pl-3 ">
+                      {key === "platform" ? (
+                        menuItems[key].sections.map((section, idx) => (
+                          <div key={idx} className="">
+                            <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-2">
+                              {section.title}
+                            </h3>
+                            <div>
+                              {section.items.map((item, itemidx) => (
+                                <Link
+                                  key={itemidx}
+                                  to={`/${key}/${item.name.toLowerCase()}`}
+                                  className="group flex items-start p-2 rounded-lg hover:bg-gray-50"
+                                >
+                                  <div className="px-4">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {item.name}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                      {item.desc}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="space-y-2">
+                          {menuItems[key].items.map((item, idx) => (
+                            <Link
+                              key={idx}
+                              to={`/${key}/${item.name.toLowerCase()}`}
+                              className="group flex items-start p-2 rounded-lg hover:bg-gray-50"
+                            >
+                              <div className="px-4">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {item.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.desc}
+                                </p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
             <Link to="/enterprise" className="hover:text-gray-300">
@@ -120,12 +175,130 @@ const Navbar = () => {
           </div>
 
           {/* auth btn  */}
-          <div>Buttons</div>
+          <div className="hidden md:flex  gap-3 justify-center items-center">
+            <Link to="/login" className="hover:text-gray-400 hidden xl:block">
+              Log in
+            </Link>
+            <Link to="/contact" className="hover:text-gray-400 hidden xl:block">
+              Contact sales
+            </Link>
+            <Link
+              to="/get-started"
+              className="hover:text-gray-400 bg-blue-700 px-4 py-2 rounded-md hover:bg-blue-300"
+            >
+              Get Started - it's free
+            </Link>
+          </div>
 
           {/* menu  */}
-          <div className="md:hidden">mobile menu</div>
+          <div className="md:hidden">
+            <button
+              onClick={toggleMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md hover:text-gray-300 hover:bg-gray-800"
+            >
+              {!isMenuOpen ? (
+                <MdMenu className="block w-6 h-6" />
+              ) : (
+                <MdClose className="block w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
+      {isMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {Object.keys(menuItems).map((key) => (
+              <div className="space-y-2">
+                <button
+                  onClick={() => toggleDropdown(key)}
+                  className="hover:text-gray-300 px-3 py-2 rounded-md  flex items-center"
+                >
+                  {menuItems[key].title}
+                  <MdKeyboardArrowDown
+                    className={`ml-2 h-5 w-5 transition-transform ${
+                      activeDropdown === key ? "transform rotate-180" : ""
+                    } `}
+                  />
+                </button>
+
+                {activeDropdown === key && (
+                  <div className="bg-white text-black">
+                    <div className=" pl-4">
+                      {key === "platform" ? (
+                        menuItems[key].sections.map((section, idx) => (
+                          <div key={idx} className="py-3">
+                            <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-2">
+                              {section.title}
+                            </h3>
+                            <div>
+                              {section.items.map((item, itemidx) => (
+                                <Link
+                                  key={itemidx}
+                                  to={`/${key}/${item.name.toLowerCase()}`}
+                                  className="group flex items-start p-2 rounded-lg hover:bg-gray-50"
+                                >
+                                  <div className="px-4">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {item.name}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                      {item.desc}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="space-y-2">
+                          {menuItems[key].items.map((item, idx) => (
+                            <Link
+                              key={idx}
+                              to={`/${key}/${item.name.toLowerCase()}`}
+                              className="group flex items-start p-2 rounded-lg hover:bg-gray-50"
+                            >
+                              <div className="px-4">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {item.name}
+                                </p>
+                               
+                               
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            <Link
+              to="/enterprise"
+              className="block px-2 py-3 hover:bg-gray-800"
+            >
+              Enterprise
+            </Link>
+            <Link to="/pricing" className="block px-2 py-3 hover:bg-gray-800">
+              Pricing
+            </Link>
+            <Link to="/login" className="block px-2 py-3 hover:bg-gray-800">
+              Log in
+            </Link>
+            <Link to="/contact" className="block px-2 py-3 hover:bg-gray-800">
+              Contact
+            </Link>
+            <Link
+              to="/get-started"
+              className="block px-2 py-3 hover:bg-gray-800"
+            >
+              Get Started - it's free
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
