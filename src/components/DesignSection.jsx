@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { BsPauseFill, BsPlayFill } from "react-icons/bs";
+import { HiArrowRight } from "react-icons/hi";
 import { Link } from "react-router";
 
 
@@ -136,12 +138,55 @@ const DesignSection = () => {
             </div>
 
             {/* progress bar */}
-            <div>Accordians</div>
+            <div className="space-y-6">
+              {
+                tabsData.map((tab) =>(
+                  <div onClick={()=> handleTabClick(tab.id)} className="relative pl-4 cursor-pointer">
+                    {/* progress bar */}
+
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-800">
+                      {activeTab === tab.id && (
+                        <div className="absolute top-0 left-0 w-full bg-blue-600 transition-all duration-100" style={{height:`${progress}%`}}></div>
+                      )}
+                    </div>
+                    {/* title */}
+
+                    <h3 className="text-xl font-semibold text-white mb-2">{tab.title}</h3>
+                    {/* sub title */}
+
+                    <p className={`text-gray-400 transition-all duration-300 ${activeTab === tab.id ? 'h-auto opacity-100': 'h-0 opacity-0 overflow-hidden'}`}>{tab.subtitle}</p>
+                  </div>
+                ))
+              }
+            </div>
 
           </div>
 
           {/* video */}
-          <div>video</div>
+          <div className="relative">
+            <div className="max-w-[640px] mx-auto">
+              {
+                tabsData.map((tab) => (
+                  <div className={`transition-opacity duration-500 ${activeTab === tab.id ? 'opacity-100': 'opacity-0 hidden'}`}>
+                    <video src={tab.video} data-tab={tab.id} poster={tab.poster} className="w-full rounded-lg" autoPlay muted playsInline loop></video>
+
+
+                    {/* text bottom  */}
+                    <div className="flex items-center justify-between mt-4">
+                      <Link className="inline-flex items-center text-white hover:text-gray-300 transition-colors" to="/">{tab.cta.text}
+                      <HiArrowRight className="ml-2"/>
+                      </Link>
+                      <button onClick={togglePlayPause} className="p-2 text-white hover:text-gray-300">
+                        {
+                          isPlaying? <BsPauseFill size={24}/> : <BsPlayFill size={24}/>
+                        }
+                      </button>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
 
         </div>
 
